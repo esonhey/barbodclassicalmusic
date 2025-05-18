@@ -1,0 +1,276 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_DESCRIPTION } from "../consts";
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    const form = document.getElementById("contactForm") as HTMLFormElement;
+
+    fetch(form.action, {
+      method: "POST",
+      body: data,
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          // نمایش پیام موفقیت‌آمیز
+          document.getElementById("success-message")!.classList.remove("hidden");
+          form.reset();
+        } else {
+          alert("خطایی رخ داده است. لطفاً دوباره تلاش کنید.");
+        }
+      })
+      .catch((error) => {
+        alert("مشکلی در ارسال پیام به وجود آمده است.");
+      });
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={"تماس با من"} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+
+    <div class="contact-container">
+      <h1>تماس با من</h1>
+      <form
+        id="contact-form"
+        action="https://formspree.io/f/mleqknoy"
+        method="POST"
+        class="contact-form"
+      >
+        <div class="form-group">
+          <label for="name">:نام</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+    
+        <div class="form-group">
+          <label for="email">:ایمیل</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+    
+        <div class="form-group">
+          <label for="message">:پیام</label>
+          <textarea id="message" name="message" required></textarea>
+        </div>
+    
+        <div class="wrap">
+          <button class="button" type="submit">ارسال</button>
+        </div>
+      </form>
+    
+      <!-- Success message -->
+      <div id="success-message" class="hidden success-message">
+        <p>پیام شما با موفقیت ارسال شد! با تشکر از شما.</p>
+      </div>
+    
+      <div class="contact-info">
+        <h2>اطلاعات تماس</h2>
+        <p>ایمیل: bmoshky@gmail.com</p>
+        <p>.شبکه‌های اجتماعی</p>
+        <div class="social-links">
+          <a href="https://www.instagram.com/barbod_moshky.piano/">اینستاگرام</a>
+          <a href="https://t.me/barbodclassicalmusic">تلگرام</a>
+        </div>
+      </div>
+    </div>
+    <Footer />
+  </body>
+</html>
+
+<style>
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+  font-family: "Nunito", sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  padding: 20px;
+}
+
+/* Contact Container */
+.contact-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Heading */
+h1 {
+  font-size: 32px;
+  color: #4a5568;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+/* Paragraphs */
+p {
+  font-size: 18px;
+  color: #718096;
+  margin-bottom: 15px;
+}
+
+/* Form Styling */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.contact-form label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #4a5568;
+  align-self: flex-start;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  max-width: 600px;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  background: #f7fafc;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #4fd1c5;
+  box-shadow: 0 0 8px rgba(79, 209, 197, 0.5);
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Button Styling */
+.button {
+  padding: 12px 30px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(90deg, #38b2ac, #319795);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(56, 178, 172, 0.3);
+}
+
+/* Success Message */
+.success-message {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e6fffa;
+  border: 1px solid #81e6d9;
+  border-radius: 8px;
+  color: #2c7a7b;
+  font-size: 18px;
+  font-weight: bold;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Contact Info */
+.contact-info {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.contact-info h2 {
+  font-size: 24px;
+  color: #4a5568;
+  margin-bottom: 10px;
+}
+
+.contact-info p {
+  font-size: 16px;
+  color: #718096;
+}
+
+.social-links a {
+  display: inline-block;
+  margin: 10px;
+  color: #4fd1c5;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-links a:hover {
+  color: #319795;
+  transform: scale(1.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contact-container {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    max-width: 100%;
+  }
+
+  .button {
+    width: 100%;
+  }
+}
+</style>
